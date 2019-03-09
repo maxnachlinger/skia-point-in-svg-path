@@ -1,0 +1,15 @@
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y build-essential curl llvm clang cmake g++ make git rsync \
+  libfontconfig-dev libgl1-mesa-dev libglu1-mesa-dev
+
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
+
+RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git; \
+  git clone https://skia.googlesource.com/skia.git; \
+  export PATH="${PWD}/depot_tools:${PATH}"; \
+  cd skia; \
+  git checkout 29d5dec9a0783a033b921dc483fb98d565d684f6; \
+  python tools/git-sync-deps
+
+COPY build-skia.sh build-skia.sh
