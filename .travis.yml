@@ -1,0 +1,20 @@
+os: linux
+sudo: required
+language: node_js
+node_js:
+  - "10"
+install: export CXX="g++-8"
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - build-essential
+      - libfontconfig-dev
+      - libgl1-mesa-dev
+      - libglu1-mesa-dev
+      - clang
+      - cmake
+      - gcc
+      - g++8
+      - make
