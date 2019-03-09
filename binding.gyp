@@ -12,7 +12,7 @@
           {
             "xcode_settings": {
               "OTHER_CPLUSPLUSFLAGS": [
-                "-std=c++11"
+                "-std=c++14"
               ],
               "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
               "GCC_ENABLE_CPP_RTTI": "YES",
@@ -48,6 +48,17 @@
         [
           "OS=='linux'",
           {
+            "cflags!": [
+              "-fno-exceptions",
+              "-fno-rtti"
+            ],
+            "cflags_cc!": [
+              "-fno-exceptions",
+              "-fno-rtti"
+            ],
+            "cflags": [
+              "-std=c++14"
+            ],
             "include_dirs": [
               "<!@(node -p 'require(\"node-addon-api\").include')",
               "<(module_root_dir)/include/skia/include/core",
