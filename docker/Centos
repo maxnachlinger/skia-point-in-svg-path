@@ -2,7 +2,6 @@ FROM centos:latest
 
 RUN yum update -y && yum group install "Development Tools" -y && yum install -y centos-release-scl devtoolset-8-gcc* \
   curl llvm clang cmake make git rsync libfontconfig-dev libgl1-mesa-dev libglu1-mesa-dev
-RUN scl enable devtoolset-8
 
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git; \
   git clone https://skia.googlesource.com/skia.git; \
