@@ -24,9 +24,9 @@
               "/System/Library/Frameworks/CoreText.Framework/Headers",
               "/System/Library/Frameworks/CoreServices.Framework/Headers",
               "<!@(node -p 'require(\"node-addon-api\").include')",
-              "<(module_root_dir)/include/skia/include/core",
-              "<(module_root_dir)/include/skia/include/config",
-              "<(module_root_dir)/include/skia/include/utils",
+              "<(module_root_dir)/include/include/core",
+              "<(module_root_dir)/include/include/config",
+              "<(module_root_dir)/include/include/utils",
             ],
             "link_settings": {
               "libraries": [
@@ -40,7 +40,7 @@
               "<!(node -p 'require(\"node-addon-api\").gyp')"
             ],
             "libraries": [
-              "-L<(module_root_dir)/include/skia/out/Release",
+              "-L<(module_root_dir)/include/out/Release",
               "-lskia"
             ]
           }
@@ -61,15 +61,15 @@
             ],
             "include_dirs": [
               "<!@(node -p 'require(\"node-addon-api\").include')",
-              "<(module_root_dir)/include/skia/include/core",
-              "<(module_root_dir)/include/skia/include/config",
-              "<(module_root_dir)/include/skia/include/utils",
+              "<(module_root_dir)/include/include/core",
+              "<(module_root_dir)/include/include/config",
+              "<(module_root_dir)/include/include/utils",
             ],
             "dependencies": [
               "<!(node -p 'require(\"node-addon-api\").gyp')"
             ],
             "libraries": [
-              "-L<(module_root_dir)/include/skia/out/Release",
+              "-L<(module_root_dir)/include/out/Release",
               "-lskia"
             ]
           }
