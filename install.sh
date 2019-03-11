@@ -10,9 +10,8 @@ cd skia
 # a version I know works :)
 git checkout 29d5dec9a0783a033b921dc483fb98d565d684f6
 
-python tools/git-sync-deps
+#python tools/git-sync-deps
 cd ../../
-pwd
 
 # we're not building Skia here - just extract the archive
 if [[ "$OSTYPE" == "darwin"* ]]; then
