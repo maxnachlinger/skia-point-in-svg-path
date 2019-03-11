@@ -47,7 +47,9 @@ console.time('Js: Small input');
 console.log(processInputJs(smallInput));
 console.timeEnd('Js: Small input');
 
+console.log('Generating large input set, this might take awhile')
 const largeInput = generate()
+console.log('Done')
 
 console.time('Skia: Large input');
 console.log(processInputSkia(largeInput));
