@@ -1,20 +1,20 @@
-os: linux
-sudo: required
+sudo: false
 language: node_js
 node_js:
   - "10"
-install: export CXX="g++-8" && npm i
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
-#    packages:
-#      - build-essential
-#      - libfontconfig-dev
-#      - libgl1-mesa-dev
-#      - libglu1-mesa-dev
-#      - clang
-#      - cmake
-#      - gcc
-#      - g++8
-#      - make
+      - llvm-toolchain-precise-3.5
+    packages:
+      - clang-8
+before_install:
+  - if [[ $(uname -s) == 'Linux' ]]; then
+    export CXX="clang++-8";
+    export CC="clang-8";
+    fi;
+  - export PATH=./node_modules/.bin/:$PATH
+  - npm install node-gyp -g
+install:
+  - npm i
