@@ -6,9 +6,7 @@ addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
-before_install:
-  - if [[ $(uname -s) == 'Linux' ]]; then
-      export CXXFLAGS="-stdlib=libc++";
-    fi;
+    packages:
+      - gcc-c++
 install:
   - npm i
