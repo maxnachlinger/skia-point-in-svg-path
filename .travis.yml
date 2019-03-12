@@ -8,6 +8,7 @@ addons:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.5
     packages:
+      - libc++-dev
       - clang-3.5
 before_install:
   - if [[ $(uname -s) == 'Linux' ]]; then
