@@ -6,17 +6,9 @@ addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.5
-    packages:
-      - libc++-dev
-      - clang-3.5
 before_install:
   - if [[ $(uname -s) == 'Linux' ]]; then
-    export CXX="clang++-3.5";
-    export CC="clang-3.5";
-    export CXXFLAGS="-stdlib=libc++";
+      export CXXFLAGS="-stdlib=libc++";
     fi;
-  - export PATH=./node_modules/.bin/:$PATH
-  - npm install node-gyp -g
 install:
   - npm i
