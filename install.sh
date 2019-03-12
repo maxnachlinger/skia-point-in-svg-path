@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-tar -xvzf skia-include.tar.gz > /dev/null 2>&1
-
 if [[ "$OSTYPE" == "darwin"* ]]; then
   tar -xvzf mac.tar.gz > /dev/null 2>&1
 else

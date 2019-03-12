@@ -3,5 +3,5 @@ node_modules
 *.log
 .idea
 build
-include
+include/skia/out
 example/*.json
