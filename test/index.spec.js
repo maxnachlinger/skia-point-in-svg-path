@@ -9,6 +9,10 @@ describe('contains tests', () => {
     });
   });
 
+  it('handles bad path data', () => {
+    expect(contains('test', { x: 100, y: 100 })).toBe(false);
+  });
+
   it('correctly identifies a point inside a path', () => {
     [{
       input: ['M80 80A 45 45, 0, 0, 0, 125 125L 125 80 Z', { x: 100, y: 100 }],
