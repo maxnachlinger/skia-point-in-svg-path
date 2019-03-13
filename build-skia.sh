@@ -13,9 +13,6 @@ git clone https://skia.googlesource.com/skia.git
 export PATH="${PWD}/depot_tools:${PATH}"
 cd skia
 
-# a version I know works :)
-git checkout 29d5dec9a0783a033b921dc483fb98d565d684f6
-
 python tools/git-sync-deps
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -25,4 +22,3 @@ else
 fi
 
 ninja -C out/Release skia
-cd ../../
