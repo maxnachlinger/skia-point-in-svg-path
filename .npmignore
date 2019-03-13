@@ -1,7 +1,7 @@
 example
 build
 docker
-include/skia/out
+include
 test
 .travis.yml
 docker-build.sh
