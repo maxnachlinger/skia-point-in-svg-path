@@ -6,3 +6,5 @@ test
 .travis.yml
 docker-build.sh
 .skia-build
+build-skia.sh
+.idea
