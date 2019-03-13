@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "./install.sh",
-    "configure": "node-gyp configure",
     "build": "node-gyp build",
     "install": "node-gyp rebuild",
     "test": "$(npm bin)/jest ./test/index.spec.js"
