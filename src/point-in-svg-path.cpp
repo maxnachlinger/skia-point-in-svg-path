@@ -4,7 +4,12 @@
 
 bool pointInSvgPath::contains(std::string pathDataStr, float x, float y) {
     SkPath path;
-    SkParsePath::FromSVGString(pathDataStr.c_str(), &path);
+
+    bool valid = SkParsePath::FromSVGString(pathDataStr.c_str(), &path);
+    if (!valid) {
+      return false;
+    }
+
     return path.contains(x, y);
 }
 
