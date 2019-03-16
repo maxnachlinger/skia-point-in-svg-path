@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "./install.sh",
     "build": "node-gyp build",
-    "install": "CC=clang CXX=clang++ LINKXX=clang++ LINK=clang node-gyp rebuild",
+    "install": "node-gyp rebuild",
     "test": "$(npm bin)/jest ./test/index.spec.js"
   },
   "homepage": "https://github.com/maxnachlinger/skia-point-in-svg-path",
