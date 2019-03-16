@@ -5,6 +5,12 @@ RUN apt-get update && apt-get install -y build-essential curl llvm clang cmake g
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs
 
+# get the latest clang
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+RUN apt-get update
+RUN apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8.0 main"
+RUN apt-get install -y clang-8.0 lld-8.0
+
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git; \
   git clone https://skia.googlesource.com/skia.git; \
   export PATH="${PWD}/depot_tools:${PATH}"; \
