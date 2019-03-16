@@ -1,22 +1,12 @@
-FROM ubuntu:latest
-RUN apt-get update && apt-get install -y build-essential curl llvm clang cmake g++ make git rsync \
-  libfontconfig-dev libgl1-mesa-dev libglu1-mesa-dev
+FROM ubuntu:bionic
+RUN apt-get update && apt-get install -y build-essential wget cmake g++ make git rsync \
+  libfontconfig-dev libgl1-mesa-dev libglu1-mesa-dev software-properties-common
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install -y nodejs
-
-# get the latest clang
-RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
-RUN apt-get update
-RUN apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8.0 main"
-RUN apt-get install -y clang-8.0 lld-8.0
-
-RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git; \
-  git clone https://skia.googlesource.com/skia.git; \
-  export PATH="${PWD}/depot_tools:${PATH}"; \
-  cd skia; \
-  git checkout 29d5dec9a0783a033b921dc483fb98d565d684f6; \
-  python tools/git-sync-deps
+# clang
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add -
+RUN apt-get update -y
+RUN apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main"
+RUN apt-get install -y clang-8 lldb-8 lld-8
 
 COPY build-skia.sh build-skia.sh
 RUN chmod 755 ./build-skia.sh && ./build-skia.sh

@@ -1,17 +1,12 @@
-const pointInSvgPath = require('./build/Release/pointInSvgPath.node');
+const lib = require('./build/Release/pointInSvgPath.node');
 
-const contains = (pathString, point) => {
-  if (!pathString
-    || typeof pathString !== 'string'
-    || !point
-    || !point.hasOwnProperty('x')
-    || typeof point.x !== 'number'
-    || !point.hasOwnProperty('y')
-    || typeof point.y !== 'number'
-  ) {
-    throw new Error('Invalid input, pathString and point object of the form {x: 0, y: 0} expected.');
+const validArray = (a) => a && Array.isArray(a) && a.length > 0;
+
+const getPathsContainingPoints = (paths, points) => {
+  if (!validArray(paths) || !validArray(points)) {
+    throw new Error('Invalid input, array of path objects [{data: "", id: ""}] and point objects: [{id: "", x: 0, y: 0}] expected.');
   }
-  return pointInSvgPath.contains(pathString, point.x, point.y);
+  return lib.getPathsContainingPoints(paths, points);
 };
 
-module.exports = contains;
+module.exports = getPathsContainingPoints;
