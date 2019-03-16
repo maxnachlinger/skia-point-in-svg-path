@@ -6,9 +6,12 @@
 
 docker build --tag=ubuntudev -f ./docker/Ubuntu .
 
-id=$(docker create ubuntudev)
 rm -rf ./include
-mkdir ./include/skia/out/Release
-docker cp $id:/.skia-build/skia/out/Release ./include/skia/out/Release
+mkdir -p ./include/skia/out/Release
+
+id=$(docker create ubuntudev)
+docker cp $id:/.skia-build/skia/out/Release/libskia.a ./include/skia/out/Release
+
+tar -czvf linux.tar.gz ./include
 
 docker rm -v $id
