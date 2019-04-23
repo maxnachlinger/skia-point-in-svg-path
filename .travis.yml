@@ -1,13 +1,4 @@
 sudo: false
 language: node_js
 node_js:
-  - "10"
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-7
-      - g++-7
-install:
-  - npm i
+  - 10
