@@ -1,6 +1,6 @@
 {
   "name": "skia-point-in-svg-path",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Checks if a point is in an svg path via Skia",
   "main": "index.js",
   "scripts": {
