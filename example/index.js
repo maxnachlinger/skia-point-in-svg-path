@@ -1,60 +1,10 @@
-'use strict'
+'use strict';
 
-const skiaPointInSvgPath = require('..')
-const pointInSvgPath = require('point-in-svg-path')
-const {generate} = require('./generate-large-input')
-const smallInput = require('./input-small')
+const skiaPointInSvgPath = require('..');
+const {points, paths} = require('./input');
 
-const processInputSkia = (input) => input.reduce((accum, {x, y, d}) => {
-  if (!d) {
-    return accum;
-  }
-  accum.checks++;
-  if (skiaPointInSvgPath(d, {x, y})) {
-    accum.hits++;
-  } else {
-    accum.misses++;
-  }
-  return accum;
-}, {
-  checks: 0,
-  hits: 0,
-  misses: 0,
-});
-
-const processInputJs = (input) => input.reduce((accum, {x, y, d}) => {
-  if (!d) {
-    return accum;
-  }
-  accum.checks++;
-  if (pointInSvgPath(d, x, y)) {
-    accum.hits++;
-  } else {
-    accum.misses++;
-  }
-  return accum;
-}, {
-  checks: 0,
-  hits: 0,
-  misses: 0,
-});
-
-console.time('Skia: Small input');
-console.log(processInputSkia(smallInput));
-console.timeEnd('Skia: Small input');
-
-console.time('Js: Small input');
-console.log(processInputJs(smallInput));
-console.timeEnd('Js: Small input');
-
-console.log('Generating large input set, this might take awhile')
-const largeInput = generate()
-console.log('Done')
-
-console.time('Skia: Large input');
-console.log(processInputSkia(largeInput));
-console.timeEnd('Skia: Large input');
-
-console.time('Js: Large input');
-console.log(processInputJs(largeInput));
-console.timeEnd('Js: Large input');
+const label = `(${points.length}) points, (${paths.length}) paths`;
+console.time(label);
+const result = skiaPointInSvgPath(paths, points);
+console.timeEnd(label);
+// console.log(JSON.stringify(result, null, 2))
