@@ -8,6 +8,8 @@
 struct Path
 {
     std::string id;
+    float x;
+    float y;
     SkPath skPath;
 };
 
@@ -45,9 +47,7 @@ Napi::Array pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& i
     Napi::Array pointsInput = info[1].As<Napi::Array>();
     unsigned int pointsInputLength = pointsInput.Length();
 
-    float x, y;
-    std::string id;
-
+    double x, y;
     Napi::Object result;
     int intersectingPathIdsSize, j;
     std::vector<std::string> intersectingPathIds;
@@ -56,11 +56,14 @@ Napi::Array pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& i
 
     for (i = 0; i < pointsInputLength; i++) {
         obj = pointsInput.Get(i).ToObject();
-        x = obj.Get("x").ToNumber().FloatValue();
-        y = obj.Get("y").ToNumber().FloatValue();
+        x = obj.Get("x").ToNumber().DoubleValue();
+        y = obj.Get("y").ToNumber().DoubleValue();
 
         result = Napi::Object::New(env);
         result.Set("pointId", obj.Get("id").ToString());
+        result.Set("x", x);
+        result.Set("y", y);
+
         intersectingPathIds.clear();
 
         // find paths which contain x,y
