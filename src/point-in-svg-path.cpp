@@ -1,35 +1,92 @@
+#include <string>
+#include <vector>
+#include <iostream>
 #include "point-in-svg-path.h"
 #include "SkPath.h"
 #include "SkParsePath.h"
 
-bool pointInSvgPath::contains(std::string pathDataStr, float x, float y) {
-    SkPath path;
+struct Path
+{
+    std::string id;
+    SkPath skPath;
+};
 
-    bool valid = SkParsePath::FromSVGString(pathDataStr.c_str(), &path);
-    if (!valid) {
-      return false;
-    }
-
-    return path.contains(x, y);
-}
-
-Napi::Boolean pointInSvgPath::ContainsWrapped(const Napi::CallbackInfo& info) {
+Napi::Array pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
-    if (info.Length() < 3 || !info[0].IsString() || !info[1].IsNumber() || !info[2].IsNumber()) {
-        Napi::TypeError::New(env, "Path data string and an x and y coordinates expected")
+    if (info.Length() < 2) {
+        Napi::TypeError::New(env, "Expected an array of paths and an array of points")
         .ThrowAsJavaScriptException();
     }
 
-    Napi::String pathDataStr = info[0].As<Napi::String>();
-    Napi::Number x = info[1].As<Napi::Number>();
-    Napi::Number y = info[2].As<Napi::Number>();
+    // read paths, create Skia paths
+    Napi::Array pathsInput = info[0].As<Napi::Array>();
+    unsigned int pathsInputLength = pathsInput.Length();
 
-    bool returnValue = pointInSvgPath::contains(pathDataStr, x.FloatValue(), y.FloatValue());
+    std::vector<Path> paths;
+    paths.reserve(pathsInput.Length());
 
-    return Napi::Boolean::New(env, returnValue);
+    unsigned int i;
+    Napi::Object obj;
+    std::string data;
+    Path path;
+
+    for (i = 0; i < pathsInputLength; i++) {
+        obj = pathsInput.Get(i).ToObject();
+
+        path = Path();
+        path.id = obj.Get("id").ToString();
+
+        data = obj.Get("data").ToString();
+        SkParsePath::FromSVGString(data.c_str(), &path.skPath);
+
+        paths.push_back(path);
+    }
+
+    Napi::Array pointsInput = info[1].As<Napi::Array>();
+    unsigned int pointsInputLength = pointsInput.Length();
+
+    float x, y;
+    std::string id;
+
+    Napi::Object result;
+    int intersectingPathIdsSize, j;
+    std::vector<std::string> intersectingPathIds;
+    Napi::Array intersectingPathIdsArr;
+    Napi::Array results = Napi::Array::New(env, pointsInputLength);
+
+    for (i = 0; i < pointsInputLength; i++) {
+        obj = pointsInput.Get(i).ToObject();
+        x = obj.Get("x").ToNumber().FloatValue();
+        y = obj.Get("y").ToNumber().FloatValue();
+
+        result = Napi::Object::New(env);
+        result.Set("pointId", obj.Get("id").ToString());
+        intersectingPathIds.clear();
+
+        // find paths which contain x,y
+        for (Path _path : paths) {
+            if (_path.skPath.contains(x, y)) {
+                intersectingPathIds.push_back(_path.id);
+            }
+        }
+
+        // intersectingPathIds vector -> napi array
+        intersectingPathIdsSize = intersectingPathIds.size();
+        intersectingPathIdsArr = Napi::Array::New(env, intersectingPathIds.size());
+
+        for (j = 0; j < intersectingPathIdsSize; j++) {
+            intersectingPathIdsArr[j] = intersectingPathIds[j];
+        }
+
+        result.Set("intersectingPathIds", intersectingPathIdsArr);
+
+        results[i] = result;
+    }
+
+    return results;
 }
 
 Napi::Object pointInSvgPath::Init(Napi::Env env, Napi::Object exports) {
-    exports.Set("contains", Napi::Function::New(env, pointInSvgPath::ContainsWrapped));
+    exports.Set("getPathsContainingPoints", Napi::Function::New(env, pointInSvgPath::getPathsContainingPoints));
     return exports;
 }
