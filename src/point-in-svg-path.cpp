@@ -5,81 +5,13 @@
 #include "SkPath.h"
 #include "SkParsePath.h"
 
-//    struct Path
-//    {
-//        std::string data;
-//        std::string id;
-//        SkPath* skPath;
-//    };
-//
-//    struct InternalPath : Path
-//    {
-//        SkPath* skPath;
-//    };
-//
-//    struct Point
-//    {
-//        float x;
-//        float y;
-//    };
-//
-//    struct PathsContainingPointResult
-//    {
-//        Point point;
-//        std::vector<std::string> paths;
-//    };
-//
-//
-//std::vector<PointWithPaths> _pointInSvgPath::getPathsContainingPoints(std::vector<Path> paths, std::vector<Point> points) {
-//    std::vector<InternalPath> internalPaths;
-//    internalPaths.reserve(paths.size());
-//
-//    for(Path path : paths)
-//    {
-//        InternalPath internalPath = InternalPath();
-//        internalPath.data = path.data;
-//        internalPath.id = path.id;
-//        SkParsePath::FromSVGString(path.data.c_str(), &internalPath.skPath);
-//
-//        internalPaths.push_back(internalPath);
-//    }
-//
-//    std::vector<PointWithPaths> result;
-//    result.reserve(points.size());
-//
-//    for(Point point : points)
-//    {
-//        PointWithPaths pointWithPaths = PointWithPaths();
-//        pointWithPaths.point = point;
-//        pointWithPaths.paths = std::vector<Path>{};
-//
-//        for (InternalPath internalPath : internalPaths) {
-//            if (internalPath.skPath.contains(point.x, point.y)) {
-//                Path foundPath = Path();
-//                foundPath.data = internalPath.data;
-//                foundPath.id = internalPath.id;
-//                pointWithPaths.paths.push_back(foundPath);
-//            }
-//        }
-//
-//        result.push_back(pointWithPaths);
-//    }
-//
-//    return result;
-//}
-
 struct Path
 {
     std::string id;
     SkPath skPath;
 };
 
-struct PathsContainingPointResult
-{
-    std::vector<std::string> idsContainingPoint;
-};
-
-Napi::Object pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& info) {
+Napi::Array pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     if (info.Length() < 2) {
         Napi::TypeError::New(env, "Expected an array of paths and an array of points")
@@ -90,8 +22,8 @@ Napi::Object pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& 
     Napi::Array pathsInput = info[0].As<Napi::Array>();
     unsigned int pathsInputLength = pathsInput.Length();
 
-    std::vector<Path> idsAndSkiaPaths;
-    idsAndSkiaPaths.reserve(pathsInput.Length());
+    std::vector<Path> paths;
+    paths.reserve(pathsInput.Length());
 
     unsigned int i;
     Napi::Object obj;
@@ -106,9 +38,8 @@ Napi::Object pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& 
 
         data = obj.Get("data").ToString();
         SkParsePath::FromSVGString(data.c_str(), &path.skPath);
-        // std::cout << path.id << "," << data << std::endl;
 
-        idsAndSkiaPaths.push_back(path);
+        paths.push_back(path);
     }
 
     Napi::Array pointsInput = info[1].As<Napi::Array>();
@@ -117,15 +48,42 @@ Napi::Object pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& 
     float x, y;
     std::string id;
 
+    Napi::Object result;
+    int intersectingPathIdsSize, j;
+    std::vector<std::string> intersectingPathIds;
+    Napi::Array intersectingPathIdsArr;
+    Napi::Array results = Napi::Array::New(env, pointsInputLength);
+
     for (i = 0; i < pointsInputLength; i++) {
         obj = pointsInput.Get(i).ToObject();
-        id = obj.Get("id").ToString();
         x = obj.Get("x").ToNumber().FloatValue();
         y = obj.Get("y").ToNumber().FloatValue();
-        std::cout << id << ": " << x << "," << y << std::endl;
+
+        result = Napi::Object::New(env);
+        result.Set("pointId", obj.Get("id").ToString());
+        intersectingPathIds.clear();
+
+        // find paths which contain x,y
+        for (Path _path : paths) {
+            if (_path.skPath.contains(x, y)) {
+                intersectingPathIds.push_back(_path.id);
+            }
+        }
+
+        // intersectingPathIds vector -> napi array
+        intersectingPathIdsSize = intersectingPathIds.size();
+        intersectingPathIdsArr = Napi::Array::New(env, intersectingPathIds.size());
+
+        for (j = 0; j < intersectingPathIdsSize; j++) {
+            intersectingPathIdsArr[j] = intersectingPathIds[j];
+        }
+
+        result.Set("intersectingPathIds", intersectingPathIdsArr);
+
+        results[i] = result;
     }
 
-    return Napi::Array::New(env);
+    return results;
 }
 
 Napi::Object pointInSvgPath::Init(Napi::Env env, Napi::Object exports) {
