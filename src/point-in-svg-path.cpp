@@ -8,8 +8,6 @@
 struct Path
 {
     std::string id;
-    float x;
-    float y;
     SkPath skPath;
 };
 
