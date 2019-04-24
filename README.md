@@ -1,6 +1,11 @@
 ### skia-point-in-svg-path
 > Uses the SKIA C 2-d graphics library to determine if a given point is within a closed SVG path.
 
+[![travis][travis-image]][travis-url]
+
+[travis-image]: https://travis-ci.org/maxnachlinger/skia-point-in-svg-path.svg?branch=master
+[travis-url]: https://travis-ci.org/maxnachlinger/skia-point-in-svg-path
+
 ### Install
 ```bash
 npm i skia-point-in-svg-path
