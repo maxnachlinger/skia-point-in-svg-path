@@ -1,5 +1,5 @@
 FROM ubuntu:bionic
-RUN apt-get update && apt-get install -y build-essential wget cmake g++ make git rsync \
+RUN apt-get update && apt-get install -y build-essential wget cmake g++ make git \
   libfontconfig-dev libgl1-mesa-dev libglu1-mesa-dev software-properties-common
 
 # clang
