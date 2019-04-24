@@ -11,27 +11,19 @@ struct Path
     SkPath skPath;
 };
 
-Napi::Array pathsAndIntersectingPoints::getPointsAndIntersectingPaths(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
-    if (info.Length() < 2) {
-        Napi::TypeError::New(env, "Expected an array of paths and an array of points")
-        .ThrowAsJavaScriptException();
-    }
-
+std::vector<Path> CreatePathsVector(Napi::Array* pathsInput) {
     // read paths, create Skia paths
-    Napi::Array pathsInput = info[0].As<Napi::Array>();
-    unsigned int pathsInputLength = pathsInput.Length();
+    const unsigned int pathsInputLength = pathsInput->Length();
 
     std::vector<Path> paths;
-    paths.reserve(pathsInput.Length());
+    paths.reserve(pathsInputLength);
 
-    unsigned int i;
     Napi::Object obj;
     std::string data;
     Path path;
 
-    for (i = 0; i < pathsInputLength; i++) {
-        obj = pathsInput.Get(i).ToObject();
+    for (unsigned int i = 0; i < pathsInputLength; i++) {
+        obj = pathsInput->Get(i).ToObject();
 
         path = Path();
         path.id = obj.Get("id").ToString();
@@ -41,13 +33,27 @@ Napi::Array pathsAndIntersectingPoints::getPointsAndIntersectingPaths(const Napi
 
         paths.push_back(path);
     }
+    return paths;
+}
+
+Napi::Array pathsAndIntersectingPoints::getPointsAndIntersectingPaths(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    if (info.Length() < 2) {
+        Napi::TypeError::New(env, "Expected an array of paths and an array of points")
+        .ThrowAsJavaScriptException();
+    }
+
+    // read paths, create Skia paths
+    Napi::Array pathsInput = info[0].As<Napi::Array>();
+    std::vector<Path> paths = CreatePathsVector(&pathsInput);
 
     Napi::Array pointsInput = info[1].As<Napi::Array>();
     unsigned int pointsInputLength = pointsInput.Length();
 
     double x, y;
-    Napi::Object result;
-    int intersectingPathIdsSize, j;
+    Napi::Object result, obj;
+    unsigned int i, intersectingPathIdsSize, j;
+
     std::vector<std::string> intersectingPathIds;
     Napi::Array intersectingPathIdsArr;
     Napi::Array results = Napi::Array::New(env, pointsInputLength);
@@ -73,7 +79,6 @@ Napi::Array pathsAndIntersectingPoints::getPointsAndIntersectingPaths(const Napi
         // intersectingPathIds vector -> napi array
         intersectingPathIdsSize = intersectingPathIds.size();
         intersectingPathIdsArr = Napi::Array::New(env, intersectingPathIds.size());
-
         for (j = 0; j < intersectingPathIdsSize; j++) {
             intersectingPathIdsArr[j] = intersectingPathIds[j];
         }
