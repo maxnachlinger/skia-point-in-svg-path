@@ -57,7 +57,7 @@
               "-fno-rtti"
             ],
             "cflags": [
-              "-std=c++14"
+              "-std=c++1y"
             ],
             "include_dirs": [
               "<!@(node -p 'require(\"node-addon-api\").include')",
