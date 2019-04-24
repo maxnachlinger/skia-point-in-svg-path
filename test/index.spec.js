@@ -1,16 +1,16 @@
 'use strict';
 
-const getPathsContainingPoints = require('../');
+const getPointsAndIntersectingPaths = require('../');
 
-describe('getPathsContainingPoints tests', () => {
+describe('getPointsAndIntersectingPaths tests', () => {
   it('sanity checks input', () => {
     [[], [null, null, null], ['string', 'string', 'string']].forEach((input) => {
-      expect(() => getPathsContainingPoints(...input)).toThrow();
+      expect(() => getPointsAndIntersectingPaths(...input)).toThrow();
     });
   });
 
   it('handles bad path data', () => {
-    expect(getPathsContainingPoints(
+    expect(getPointsAndIntersectingPaths(
       [{id: 'path-0', data: 'test'}],
       [{id: 'point-0', x: 100, y: 100}],
     )).toEqual([{intersectingPathIds: [], pointId: 'point-0', x: 100, y: 100}]);
@@ -48,7 +48,7 @@ describe('getPathsContainingPoints tests', () => {
       ],
       expected: [{intersectingPathIds: ['path-0'], pointId: 'point-0', x: 300, y: 235}],
     }].forEach(({input, expected}) => {
-      expect(getPathsContainingPoints(...input)).toEqual(expected);
+      expect(getPointsAndIntersectingPaths(...input)).toEqual(expected);
     });
   });
 
@@ -78,7 +78,7 @@ describe('getPathsContainingPoints tests', () => {
       ],
       expected: [{intersectingPathIds: [], pointId: 'point-0', x: 250, y: 235}],
     }].forEach(({input, expected}) => {
-      expect(getPathsContainingPoints(...input)).toEqual(expected);
+      expect(getPointsAndIntersectingPaths(...input)).toEqual(expected);
     });
   });
 });
