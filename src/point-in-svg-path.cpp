@@ -11,7 +11,7 @@ struct Path
     SkPath skPath;
 };
 
-Napi::Array pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& info) {
+Napi::Array pathsAndIntersectingPoints::getPointsAndIntersectingPaths(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     if (info.Length() < 2) {
         Napi::TypeError::New(env, "Expected an array of paths and an array of points")
@@ -62,9 +62,8 @@ Napi::Array pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& i
         result.Set("x", x);
         result.Set("y", y);
 
-        intersectingPathIds.clear();
-
         // find paths which contain x,y
+        intersectingPathIds.clear();
         for (Path _path : paths) {
             if (_path.skPath.contains(x, y)) {
                 intersectingPathIds.push_back(_path.id);
@@ -80,14 +79,13 @@ Napi::Array pointInSvgPath::getPathsContainingPoints(const Napi::CallbackInfo& i
         }
 
         result.Set("intersectingPathIds", intersectingPathIdsArr);
-
         results[i] = result;
     }
 
     return results;
 }
 
-Napi::Object pointInSvgPath::Init(Napi::Env env, Napi::Object exports) {
-    exports.Set("getPathsContainingPoints", Napi::Function::New(env, pointInSvgPath::getPathsContainingPoints));
+Napi::Object pathsAndIntersectingPoints::Init(Napi::Env env, Napi::Object exports) {
+    exports.Set("getPointsAndIntersectingPaths", Napi::Function::New(env, pathsAndIntersectingPoints::getPointsAndIntersectingPaths));
     return exports;
 }

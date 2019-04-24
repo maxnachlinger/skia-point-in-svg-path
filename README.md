@@ -8,9 +8,9 @@ npm i skia-point-in-svg-path
 
 ### Example
 ```javascript
-const skiaPointInSvgPath = require('skia-point-in-svg-path')
+const getPathsAndIntersectingPoints = require('skia-point-in-svg-path')
   
-const results = skiaPointInSvgPath(
+const results = getPathsAndIntersectingPoints(
   [{ id: 'test-path', data: 'M80 80A 45 45, 0, 0, 0, 125 125L 125 80 Z' }], 
   [{ id: 'test-point', x: 100, y: 100 }, { id: 'test-point', x:750, y: 500 }]
 );

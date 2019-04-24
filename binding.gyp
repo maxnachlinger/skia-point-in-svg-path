@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "pointInSvgPath",
+      "target_name": "pathsAndIntersectingPoints",
       "sources": [
         "src/main.cpp",
         "src/point-in-svg-path.cpp"
@@ -57,7 +57,7 @@
               "-fno-rtti"
             ],
             "cflags": [
-              "-std=c++1y"
+              "-std=c++14"
             ],
             "include_dirs": [
               "<!@(node -p 'require(\"node-addon-api\").include')",
