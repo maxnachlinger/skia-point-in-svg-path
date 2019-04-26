@@ -4,7 +4,6 @@ docker
 include
 test
 .travis.yml
-docker-build.sh
+*.sh
 .skia-build
-build-skia.sh
 .idea
