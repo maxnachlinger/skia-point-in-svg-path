@@ -1,6 +1,5 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include "point-in-svg-path.h"
 #include "SkPath.h"
 #include "SkParsePath.h"
