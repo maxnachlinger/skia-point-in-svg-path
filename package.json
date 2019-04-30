@@ -29,6 +29,6 @@
   },
   "devDependencies": {
     "jest": "24.7.1",
-    "point-in-svg-path": "0.0.2"
+    "point-in-svg-path": "1.0.0"
   }
 }
